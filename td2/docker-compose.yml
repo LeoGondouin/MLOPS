@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+    mongo:
+        image: mongo
+
+    fruits_api:
+        build:
+            context: ./server/fruits_api
+            dockerfile: Dockerfile
+        ports:
+        - "5002:5002"
+        depends_on:
+            - mongo
+
+    predictions_api:
+        build:
+            context: ./server/predictions_api
+            dockerfile: Dockerfile
+        ports:
+        - "5001:5001"
+        depends_on:
+            - mongo
+
+    dash_app:
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        ports:
+            - "8050:8050"
+        depends_on:
+            - fruits_api
