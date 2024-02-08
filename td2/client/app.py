@@ -59,7 +59,7 @@ irisDiv = html.Div(
                 dcc.Dropdown(
                     id='cb-model',
                     options=[{'label': model_name, 'value': model_name} for model_name in lModels],
-                    style={'max-width': '400px', 'margin': 'auto', 'margin-bottom': '15px'}
+                    style={'max-width': '700px', 'margin': 'auto', 'margin-bottom': '15px','width':'100%'}
                 )
             ]
         )   
@@ -67,7 +67,7 @@ irisDiv = html.Div(
 penguinsDiv = html.Div(
             [
                 html.Label("Island :"),
-                dcc.Dropdown(id='island',options = [{"label":label, "value":label} for label in lPenguinsIslands]),
+                dcc.Dropdown(id='island',options = [{"label":label, "value":label} for label in lPenguinsIslands],style={'width':'100%'}),
 
                 html.Label("Culmen Length:"),
                 dcc.Input(id='culmen-length', type='number', className="form-control mb-2"),
@@ -88,46 +88,51 @@ penguinsDiv = html.Div(
                 dcc.Dropdown(
                     id='cb-model',
                     options=[{'label': model_name, 'value': model_name} for model_name in lModels],
-                    style={'max-width': '400px', 'margin': 'auto', 'margin-bottom': '15px'}
+                    style={'max-width': '700px', 'margin': 'auto', 'margin-bottom': '15px','width':'100%'}
                 )
             ]
         )     
 predictionView =  html.Div([
-        html.H1(id="lbl-dataset",children="Iris Species Prediction", className="text-center mb-4"),
-        dcc.Dropdown(id="cb-dataset",value="iris",options=[{'label': "Iris", 'value': "iris"},{"label":"Penguins","value":"penguins"}],style={'max-width': '400px','margin':'auto'}),
+        html.H1(id="lbl-dataset", className="text-center mb-4"),
+        dcc.Dropdown(id="cb-dataset",value="iris",options=[{'label': "Iris", 'value': "iris"},{"label":"Penguins","value":"penguins"}],style={'max-width': '700px','margin':'auto','width':'100%'}),
         html.Div(id="prediction-form",children=[
             irisDiv
-        ], style={'max-width': '400px', 'margin': 'auto'}),
+        ], style={'max-width': '700px', 'margin': 'auto'}),
         html.Div([
             html.Button('Predict', id='btn-predict', className="btn btn-primary mx-auto d-block", style={'width': '100%'})
-        ], style={'max-width': '400px','margin':'auto'}),html.Br(),
+        ], style={'max-width': '700px','margin':'auto'}),html.Br(),
         html.Div([
             html.Button('Clear inputs', id='btn-clear', className="btn btn-primary mx-auto d-block", style={'width': '100%'})
-        ], style={'max-width': '400px','margin':'auto'}),
+        ], style={'max-width': '700px','margin':'auto'}),
         html.Div(id='model-accuracy-output-iris', className="lead text-center mt-4"),
         html.Div(id='prediction-output-iris', className="lead text-center mt-4"),
         html.Div(id='model-accuracy-output-penguins', className="lead text-center mt-4"),
         html.Div(id='prediction-output-penguins', className="lead text-center mt-4"),
-    ])
+    ],style={"padding-top":"50px","margin-left":"15%"})
 
 fruitsView = html.Div(id="fruits",children=
                 [
                     html.Div([
-                        html.H1("Fruits Panel"),
-                        "Insert a fruit",html.Br(),
+                        html.H1("Fruits panel", className="text-center mb-4"),
+                        html.H3("Insert fruit(s)"),html.Br(),
                         html.Label(id="lbl-output"),
-                        dcc.Dropdown(id="cb-insert",options=["apple","mango","banana","kiwi","pear","papaya"],multi=True,style={"width":"500px"}),
-                        html.Button(id="btn-insert",children="Insert"),html.Br(),
-                        html.Button(id="btn-flush",children="Flush fruits"),
+                        dbc.Row([
+                            dbc.Col(dcc.Dropdown(id="cb-insert", options=["apple", "mango", "banana", "kiwi", "pear", "papaya"],
+                                                multi=True, style={"width": "500px"}), width=8),
+                            dbc.Col([
+                                dbc.Button(id="btn-insert", children="Insert",className="btn btn-primary",style={"margin-left":"20px"}),
+                                dbc.Button(id="btn-flush", children="Flush fruits",className="btn btn-danger",style={"margin-left":"5px"}),
+                            ], width=4),
+                        ], className="my-3"),
                         html.Div(
                             id="div-dash-table",
                             children=[ 
-                                "Current fruit list",html.Br(),
+                                html.H3("Current fruit list"),html.Br(),
                                 dash_table.DataTable(id='fruits-table',data=[],style_cell={'textAlign': 'center'})
                             ],style={'padding-top':'40px','width':'100%'}
                         )
-                    ],style={'max-width': '700px','margin':'auto'})
-                ]
+                    ],style={'max-width': '700px','margin-left':'35%'})
+                ],style={"padding-top":"50px"}
             )          
 
 @app.callback(
@@ -257,17 +262,16 @@ def predictPenguins(n_clicks,dataset,island,culmen_length,culmen_depth,flipper_l
     State('sepal-width','value'),
     State('petal-length','value'),
     State('petal-width','value'),
-    State('cb-model','value'),
     State('model-accuracy-output-iris','children'),
     State('prediction-output-iris','children'),
     State('cb-dataset','value'),
     prevent_initial_callback = True
 )
-def clearInputsIris(n_clicks,sepal_length,sepal_width,petal_length,petal_width,model,model_accuracy,prediction,dataset):
+def clearInputsIris(n_clicks,sepal_length,sepal_width,petal_length,petal_width,model_accuracy,prediction,dataset):
     if n_clicks:
         if dataset=="iris": 
             return [],[],"","","",""
-    return model_accuracy,prediction,sepal_length,sepal_width,petal_length,petal_width,model
+    return model_accuracy,prediction,sepal_length,sepal_width,petal_length,petal_width
 
 @app.callback(
     Output('model-accuracy-output-penguins','children',allow_duplicate=True),
@@ -285,17 +289,16 @@ def clearInputsIris(n_clicks,sepal_length,sepal_width,petal_length,petal_width,m
     State('flipper-length','value'),
     State('body-mass','value'),
     State('sex','value'),
-    State('cb-model','value'),
     State('model-accuracy-output-penguins','children'),
     State('prediction-output-penguins','children'),
     State('cb-dataset','value'),
     prevent_initial_callback = True
 )
-def clearInputsPenguins(n_clicks,island,culmen_length,culmen_depth,flipper_length,body_mass,sex,model,model_accuracy,prediction,dataset):
+def clearInputsPenguins(n_clicks,island,culmen_length,culmen_depth,flipper_length,body_mass,sex,model_accuracy,prediction,dataset):
     if n_clicks:
         if dataset=="penguins": 
-            return [],[],"","","","","","",""
-    return model_accuracy,prediction,island,culmen_length,culmen_depth,flipper_length,body_mass,sex,model
+            return [],[],"","","","","",""
+    return model_accuracy,prediction,island,culmen_length,culmen_depth,flipper_length,body_mass,sex
 
 
 @app.callback(
