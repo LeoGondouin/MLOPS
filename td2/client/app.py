@@ -43,17 +43,45 @@ sidebar = html.Div(
           ,id="sidebar")
 irisDiv = html.Div(
             [
-                html.Label("Sepal Length:"),
-                dbc.Input(id='sepal-length', type='number',className="form-control mb-2"),
+                html.Label(["Sepal Length: ",html.Span(id="curr-sepal-length",children=5)]),
+                dcc.Slider(
+                    id='sepal-length',
+                    min=0,
+                    max=10,
+                    step=0.1,
+                    value=5,
+                    marks={i: f'{i:.1f}' for i in range(0, 11, 1)}  # Clean marks with step of 5
+                ),
 
-                html.Label("Sepal Width:"),
-                dcc.Input(id='sepal-width', type='number', className="form-control mb-2"),
+                html.Label(["Sepal Width: ",html.Span(id="curr-sepal-width",children=4)]),
+                dcc.Slider(
+                    id='sepal-width',
+                    min=0,
+                    max=8,
+                    step=0.1,
+                    value=4,
+                    marks={i: f'{i:.1f}' for i in range(0, 9, 1)},  # Clean marks with step of 5
+                ),
 
-                html.Label("Petal Length:"),
-                dcc.Input(id='petal-length', type='number', className="form-control mb-2"),
+                html.Label(["Petal Length: ",html.Span(id="curr-petal-length",children=4)]),
+                dcc.Slider(
+                    id='petal-length',
+                    min=0,
+                    max=8,
+                    step=0.1,
+                    value=4,
+                    marks={i: f'{i:.1f}' for i in range(0, 9, 1)},  # Clean marks with step of 5
+                ),
 
-                html.Label("Petal Width:"),
-                dcc.Input(id='petal-width', type='number', className="form-control mb-3"),
+                html.Label(["Petal Width: ",html.Span(id="curr-petal-width",children=2)]),
+                dcc.Slider(
+                    id='petal-width',
+                    min=0,
+                    max=4,
+                    step=0.1,
+                    value=2,
+                    marks={i: f'{i:.1f}' for i in range(0, 5, 1)},  # Clean marks with step of 5
+                ),
 
                 html.Label("Model :"),
                 dcc.Dropdown(
@@ -69,17 +97,45 @@ penguinsDiv = html.Div(
                 html.Label("Island :"),
                 dcc.Dropdown(id='island',options = [{"label":label, "value":label} for label in lPenguinsIslands],style={'width':'100%'}),
 
-                html.Label("Culmen Length:"),
-                dcc.Input(id='culmen-length', type='number', className="form-control mb-2"),
+                html.Label(["Culmen Length: ",html.Span(id="curr-culmen-length",children=47.5)]),
+                dcc.Slider(
+                    id='culmen-length',
+                    min=25,
+                    max=70,
+                    step=0.25,
+                    value=47.5,
+                    marks={i: f'{i:.1f}' for i in range(25, 71, 5)},  # Clean marks with step of 5
+                ),
 
-                html.Label("Culmen Depth:"),
-                dcc.Input(id='culmen-depth', type='number', className="form-control mb-2"),
+                html.Label(["Culmen Depth: ",html.Span(id="curr-culmen-depth",children=17.5)]),
+                dcc.Slider(
+                    id='culmen-depth',
+                    min=10,
+                    max=25,
+                    step=0.1,
+                    value=17.5,
+                    marks={i: f'{i:.1f}' for i in range(10, 26, 1)},  # Clean marks with step of 5
+                ),
 
-                html.Label("Flipper Length:"),
-                dcc.Input(id='flipper-length', type='number', className="form-control mb-2"),
+                html.Label(["Flipper Length: ",html.Span(id="curr-flipper-length",children=200)]),
+                dcc.Slider(
+                    id='flipper-length',
+                    min=160,
+                    max=240,
+                    step=0.25,
+                    value=200,
+                    marks={i: f'{i:.1f}' for i in range(160, 241, 5)},  # Clean marks with step of 5
+                ),
 
-                html.Label("Body Mass:"),
-                dcc.Input(id='body-mass', type='number', className="form-control mb-3"),
+                html.Label(["Body Mass: ",html.Span(id="curr-body-mass",children=4500)]),
+                dcc.Slider(
+                    id='body-mass',
+                    min=2500,
+                    max=6500,
+                    step=1,
+                    value=4500,
+                    marks={i: f'{i:.1f}' for i in range(2500, 6501, 1000)},  # Clean marks with step of 5
+                ),
 
                 html.Label("Sex:"),
                 dcc.Dropdown(id='sex',options = [{"label":label, "value":label} for label in lPenguinsSex]),
@@ -215,7 +271,39 @@ def predictIris(n_clicks,dataset,sepal_length,sepal_width,petal_length,petal_wid
 
             return data[0],data[1]
         
-        
+@app.callback(
+    Output('curr-sepal-length','children'),
+    Input("sepal-length","value")
+)
+def showCurrentSepalLength(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-sepal-width','children'),
+    Input("sepal-width","value")
+)
+def showCurrentSepalWidth(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-petal-length','children'),
+    Input("petal-length","value")
+)
+def showCurrentPetalLength(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-petal-width','children'),
+    Input("petal-width","value")
+)
+def showCurrentPetalWidth(value):
+    if value:
+        return value
+
+
 @app.callback(
     Output('model-accuracy-output-penguins','children',allow_duplicate=True),
     Output('prediction-output-penguins','children',allow_duplicate=True),
@@ -248,7 +336,45 @@ def predictPenguins(n_clicks,dataset,island,culmen_length,culmen_depth,flipper_l
 
             return data[0],data[1]
 
+@app.callback(
+    Output('curr-culmen-length','children'),
+    Input("culmen-length","value")
+)
+def showCurrentCulmenLength(value):
+    if value:
+        return value
 
+@app.callback(
+    Output('curr-culmen-depth','children'),
+    Input("culmen-depth","value")
+)
+def showCurrentCulmenDepth(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-flipper-length','children'),
+    Input("flipper-length","value")
+)
+def showCurrentFlipperLength(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-flipper-depth','children'),
+    Input("culmen-depth","value")
+)
+def showCurrentCulmenDepth(value):
+    if value:
+        return value
+
+@app.callback(
+    Output('curr-body-mass','children'),
+    Input("body-mass","value")
+)
+def showCurrentBodyMass(value):
+    if value:
+        return value
     
 @app.callback(
     Output('model-accuracy-output-iris','children',allow_duplicate=True),
