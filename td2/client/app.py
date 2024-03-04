@@ -158,7 +158,7 @@ predictionView =  html.Div([
             html.Button('Predict', id='btn-predict', className="btn btn-primary mx-auto d-block", style={'width': '100%'})
         ], style={'max-width': '700px','margin':'auto'}),html.Br(),
         html.Div([
-            html.Button('Clear inputs', id='btn-clear', className="btn btn-primary mx-auto d-block", style={'width': '100%'})
+            html.Button('Clear inputs', id='btn-clear', className="btn btn-danger mx-auto d-block", style={'width': '100%'})
         ], style={'max-width': '700px','margin':'auto'}),
         html.Div(id='model-accuracy-output-iris', className="lead text-center mt-4"),
         html.Div(id='prediction-output-iris', className="lead text-center mt-4"),
@@ -396,7 +396,7 @@ def showCurrentBodyMass(value):
 def clearInputsIris(n_clicks,sepal_length,sepal_width,petal_length,petal_width,model_accuracy,prediction,dataset):
     if n_clicks:
         if dataset=="iris": 
-            return [],[],"","","",""
+            return [],[],5,4,4,2
     return model_accuracy,prediction,sepal_length,sepal_width,petal_length,petal_width
 
 @app.callback(
@@ -423,7 +423,7 @@ def clearInputsIris(n_clicks,sepal_length,sepal_width,petal_length,petal_width,m
 def clearInputsPenguins(n_clicks,island,culmen_length,culmen_depth,flipper_length,body_mass,sex,model_accuracy,prediction,dataset):
     if n_clicks:
         if dataset=="penguins": 
-            return [],[],"","","","","",""
+            return [],[],"",47.5,17.5,200,4500,""
     return model_accuracy,prediction,island,culmen_length,culmen_depth,flipper_length,body_mass,sex
 
 
@@ -454,4 +454,4 @@ main = html.Div([sidebar,html.Div(id="div-main",children=predictionView)])
 app.layout = main
 
 if __name__ == "__main__":
-    app.run_server(host='0.0.0.0', debug=True)
+    app.run_server(host='0.0.0.0')
