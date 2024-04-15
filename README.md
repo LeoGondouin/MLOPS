@@ -6,6 +6,8 @@ Just get to the root of the project folder, start Docker Desktop, open up a term
 
 ## Prediction Feature
 You can predict the species of the famous iris and penguins statistical datasets using **DecisionTree**, **RandomForest** or **SVC**
+
+
 ![](https://github.com/LeoGondouin/MLOPS/blob/main/GIFs/MLOP-iris.gif)
 ![](https://github.com/LeoGondouin/MLOPS/blob/main/GIFs/MLOPS-penguins.gif)
 ## Fruits api
