@@ -35,7 +35,7 @@ sidebar = html.Div(
                 html.Div(
                 [
                     html.H1("Menu",style={"text-decoration":"underline"}),
-                    html.H2(id="menu-pred",children = ["Iris prediction"],className="menu-opt",style={"color":"whitesmoke"}),
+                    html.H2(id="menu-pred",children = ["Prediction"],className="menu-opt",style={"color":"whitesmoke"}),
                     html.H2(id="menu-fruits",children = ["Fruits menu"],className="menu-opt"),
                 ],style={"margin-top": "50%"}
                 )

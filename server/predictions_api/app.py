@@ -13,33 +13,29 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from fastapi import FastAPI
 import seaborn as sns
+import pickle as pkl
+import joblib
 
 import pandas as pd
 
-dict_model = {
-                "Decision Tree Classifier":DecisionTreeClassifier(),
-                "Random Forest":RandomForestClassifier(),
-                "SVC":SVC(),
-            }
-
 app = FastAPI()
-
 
 @app.get("/predict/iris")
 def predictIris(sepal_length,sepal_width,petal_length,petal_width,model_name):
-
+    dict_model = {
+                    "Decision Tree Classifier":"./models/iris_dtc.pkl",
+                    "Random Forest":"./models/iris_rfc.pkl",
+                    "SVC":"./models/iris_svc.pkl",
+                }
     iris = load_iris()
-    X, y = iris.data, iris.target
-
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-    model = dict_model[model_name]
+    X, y = iris.data, iris.target    
+    
+    with open(dict_model[model_name], 'rb') as file:
+        model = pkl.load(file)
 
     
-    model.fit(X_train, y_train)
-
-    predicted_test = model.predict(X_test)
-    accuracy = accuracy_score(y_test,predicted_test)
+    predicted_test = model.predict(X)
+    accuracy = accuracy_score(y,predicted_test)
 
     prediction = model.predict([[sepal_length,sepal_width,petal_length,petal_width]])[0]
     prediction = iris.target_names[prediction]
@@ -48,34 +44,28 @@ def predictIris(sepal_length,sepal_width,petal_length,petal_width,model_name):
 
 @app.get("/predict/penguins")
 def predictPenguins(island,bill_length,bill_depth,flipper_length,body_mass,sex,model_name):
+    dict_model = {
+                "Decision Tree Classifier":"./models/penguins_dtc.pkl",
+                "Random Forest":"./models/penguins_rfc.pkl",
+                "SVC":"./models/penguins_svc.pkl",
+            }
     penguins = sns.load_dataset("penguins")
-
+    
     X, y = penguins.iloc[:,0:], penguins.iloc[:,0]
 
-    categorical_cols = ["island", "sex"]
-    numerical_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('num', SimpleImputer(strategy="median"), numerical_cols),
-            ('cat', OneHotEncoder(), categorical_cols)
-        ])
+    with open(dict_model[model_name], 'rb') as file:
+        model = joblib.load(file)
 
-    model = Pipeline(steps=[
-        ('preprocessor', preprocessor),
-        ('classifier', dict_model[model_name])
-    ])
+        
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,stratify=penguins["species"])
+    processed_data = model['preprocessor'].transform(X)
+    predicted_test = model['classifier'].predict(processed_data)
 
-    model.fit(X_train, y_train)
-
-    predicted_test = model.predict(X_test)
-
-    accuracy = accuracy_score(y_test, predicted_test)
+    accuracy = accuracy_score(y, predicted_test)
 
     input_data = pd.DataFrame([[island, bill_length, bill_depth, flipper_length, body_mass, sex]],
                                    columns=["island", "bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g", "sex"])
     prediction = model.predict(input_data)[0]
-
+    print(prediction)
     return f"Model accuracy : {accuracy}",f"Predicted specie : {prediction}"
