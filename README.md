@@ -2,7 +2,9 @@
 
 ## Start the app
 Just get to the root of the project folder, start Docker Desktop, open up a terminal and use *docker compose up --build*, wait a bit, then you're free to use the app as you see fit !
-
+```console```
+*docker compose up --build*
+```
 
 
 ## Prediction Feature
