@@ -10,4 +10,5 @@ You can predict the species of the famous iris and penguins statistical datasets
 ![](https://github.com/LeoGondouin/MLOPS/blob/main/GIFs/MLOPS-penguins.gif)
 ## Fruits api
 You can select several fruits to add to your list at once, you can also clear your list using the *Flush Fruits* button
+
 ![](https://github.com/LeoGondouin/MLOPS/blob/main/GIFs/MLOPS-fruits.gif)
